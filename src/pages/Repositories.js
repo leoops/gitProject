@@ -45,7 +45,12 @@ export default class Repositories extends Component {
   renderCardRepositorie = ({ item }) => (
     <TouchableOpacity
       style={styles.cardContainer}
-      onPress={() => this.props.navigation.navigate('PullRequests')}
+      onPress={() =>
+        this.props.navigation.navigate('PullRequests', {
+          creator: item.owner.login,
+          repositorie: item.name,
+        })
+      }
     >
       <View style={{ flex: 1 }}>
         <Text>{item.owner.login}</Text>
