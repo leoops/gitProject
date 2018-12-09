@@ -6,6 +6,7 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
+  Linking,
 } from 'react-native';
 import axios from 'axios';
 
@@ -44,11 +45,11 @@ export default class componentName extends Component {
    * @param {string} url - link de.
    */
   openURLLink = url => {
-    Linking.canOpenURL(this.props.url).then(supported => {
+    Linking.canOpenURL(url).then(supported => {
       if (supported) {
-        Linking.openURL(this.props.url);
+        Linking.openURL(url);
       } else {
-        console.log("Don't know how to open URI: " + this.props.url);
+        console.log("Don't know how to open URI: " + url);
       }
     });
   };
