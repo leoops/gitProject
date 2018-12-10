@@ -21,18 +21,14 @@ export default class Repositories extends Component {
     this.state = {
       repositories: [],
     };
+    this.page = 1;
+    this.language = 'Java';
+    this.sort = 'stars';
+    this.refreshing = false;
   }
 
   componentDidMount = () => {
-    language = 'Java';
-    sort = 'stars';
-    page = 1;
-    GetAllRepositoriesBy(language, page, sort)
-      .then(response => response.data.items)
-      .then(repositories => {
-        this.setState({ repositories });
-      })
-      .catch(error => console.warn(error));
+    this.updateRepositories();
   };
 
   /**
@@ -77,6 +73,35 @@ export default class Repositories extends Component {
    */
   keyExtractor = (item, index) => `${item.id}${index}`;
 
+  /**
+   * @memberof Repositories
+   * @instance
+   * @method getAllRepositories
+   * @description Metodo busca de todos os repositorios
+   */
+  updateRepositories = () => {
+    GetAllRepositoriesBy(this.language, this.page, this.sort)
+      .then(response => response.data.items)
+      .then(response => {
+        let { repositories } = this.state;
+        this.setState({ repositories: repositories.concat(response) });
+        this.page += 1;
+      })
+      .catch(error => console.warn(error));
+  };
+  refreshingRepositories = () => {
+    this.refreshing = true;
+    this.page = 1;
+    GetAllRepositoriesBy(this.language, this.page, this.sort)
+      .then(response => response.data.items)
+      .then(response => {
+        this.refreshing = false;
+        let { repositories } = this.state;
+        this.setState({ repositories: repositories.concat(response) });
+        this.page += 1;
+      })
+      .catch(error => console.warn(error));
+  };
   render = () => {
     const { repositories } = this.state;
     return (
@@ -84,7 +109,10 @@ export default class Repositories extends Component {
         style={styles.content}
         data={repositories}
         keyExtractor={this.keyExtractor}
+        onEndReached={this.updateRepositories}
         renderItem={this.renderCardRepositorie}
+        onRefresh={this.refreshingRepositories}
+        refreshing={this.refreshing}
       />
     );
   };
