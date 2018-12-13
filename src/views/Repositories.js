@@ -1,13 +1,7 @@
 import React, { Component } from 'react';
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  FlatList,
-  TouchableOpacity,
-} from 'react-native';
+import { StyleSheet, FlatList } from 'react-native';
 import axios from 'axios';
+import ReposritorieCard from '../components/RepositorieCard';
 
 const GetAllRepositoriesBy = (language, page, sort) => {
   baseLink = 'https://api.github.com/search/repositories?q=language:';
@@ -39,27 +33,7 @@ export default class Repositories extends Component {
    * @param {object} item - Dados do card a ser renderizado.
    */
   renderCardRepositorie = ({ item }) => (
-    <TouchableOpacity
-      style={styles.cardContainer}
-      onPress={() =>
-        this.props.navigation.navigate('PullRequests', {
-          creator: item.owner.login,
-          repositorie: item.name,
-        })
-      }
-    >
-      <View style={{ flex: 1 }}>
-        <Text>{item.owner.login}</Text>
-        <Image
-          style={styles.authorAvatar}
-          source={{ uri: item.owner.avatar_url }}
-        />
-      </View>
-      <Text style={{ flex: 1 }}>{item.name}</Text>
-      <Text style={{ flex: 1 }}>{item.description}</Text>
-      <Text style={{ flex: 0.5 }}>{item.forks_count}</Text>
-      <Text style={{ flex: 0.5 }}>{item.stargazers_count}</Text>
-    </TouchableOpacity>
+    <ReposritorieCard data={item} navigation={this.props.navigation} />
   );
 
   /**
@@ -81,7 +55,7 @@ export default class Repositories extends Component {
    */
   updateRepositories = () => {
     GetAllRepositoriesBy(this.language, this.page, this.sort)
-      .then(response => response.data.items)
+      .then(({ data }) => data.items)
       .then(response => {
         let { repositories } = this.state;
         this.setState({ repositories: repositories.concat(response) });
@@ -89,6 +63,13 @@ export default class Repositories extends Component {
       })
       .catch(error => console.warn(error));
   };
+
+  /**
+   * @memberof Repositories
+   * @instance
+   * @method refreshingRepositories
+   * @description Metodo atualizaçao de lista de repositorios
+   */
   refreshingRepositories = () => {
     this.refreshing = true;
     this.page = 1;
@@ -97,7 +78,7 @@ export default class Repositories extends Component {
       .then(response => {
         this.refreshing = false;
         let { repositories } = this.state;
-        this.setState({ repositories: repositories.concat(response) });
+        this.setState({ repositories: response });
         this.page += 1;
       })
       .catch(error => console.warn(error));
@@ -121,19 +102,5 @@ export default class Repositories extends Component {
 const styles = StyleSheet.create({
   content: {
     flex: 1,
-  },
-  cardContainer: {
-    flex: 1,
-    backgroundColor: '#0007',
-    padding: 10,
-    marginHorizontal: 9,
-    marginVertical: 5,
-    borderRadius: 5,
-  },
-  authorAvatar: {
-    width: 45,
-    height: 45,
-    borderRadius: 65,
-    resizeMode: 'contain',
   },
 });

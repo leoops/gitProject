@@ -1,5 +1,5 @@
-import Repositories from '../pages/Repositories';
-import PullRequests from '../pages/PullRequests';
+import Repositories from '../views/Repositories';
+import PullRequests from '../views/PullRequests';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 
 /**
