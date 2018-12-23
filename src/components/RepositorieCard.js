@@ -3,8 +3,9 @@ import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 
 import starImage from '../assets/images/favorites.png';
 import forkImage from '../assets/images/fork.png';
+import FastImage from 'react-native-fast-image';
 
-export default class ReposritorieCard extends Component {
+export default class RepositorieCard extends Component {
   render() {
     const { data, navigation } = this.props;
     return (
@@ -22,19 +23,20 @@ export default class ReposritorieCard extends Component {
             <Text style={styles.textName}>{data.name}</Text>
             <View style={styles.lineContainer}>
               <Text style={styles.forkLine}>
-                <Image source={forkImage} style={styles.icon} />
+                <Image style={styles.icon} source={forkImage} />
                 {data.forks_count}
               </Text>
               <Text style={styles.starLine}>
-                <Image source={starImage} style={styles.icon} />
+                <Image style={styles.icon} source={starImage} />
                 {data.stargazers_count}
               </Text>
             </View>
           </View>
           <View>
-            <Image
+            <FastImage
               style={styles.authorAvatar}
               source={{ uri: data.owner.avatar_url }}
+              resizeMode={FastImage.resizeMode.contain}
             />
             <Text>{data.owner.login}</Text>
           </View>
@@ -66,7 +68,6 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
     borderRadius: 65,
-    resizeMode: 'contain',
   },
   authorContainer: {
     flex: 1,

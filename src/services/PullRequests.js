@@ -1,10 +1,14 @@
-// URL= <criador>/<repositório>/pulls
-baseLink = 'https://api.github.com/repos';
-creator = '';
-repositorie = '';
-link = `${baseLink}/${creator}/${repositorie}/pulls`;
+import axios from 'axios';
 
-const GetAllPullResquestsBy = (creator, repositorie) => {
+/**
+ * @instance
+ * @method GetAllPullResquestsBy
+ * @description Busca de pull requests de repositorio especifico
+ * @param {string} creator - Nome do criador do repositorio
+ * @param {string} repositorie - Nome do repositorio
+ */
+// URL= <criador>/<repositório>/pulls
+export const GetAllPullResquestsBy = (creator, repositorie) => {
   baseLink = 'https://api.github.com/repos';
   link = `${baseLink}/${creator}/${repositorie}/pulls`;
   return axios.get(link);

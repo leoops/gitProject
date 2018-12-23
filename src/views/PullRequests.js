@@ -2,21 +2,16 @@ import React, { Component } from 'react';
 import {
   View,
   Text,
-  Image,
   StyleSheet,
   FlatList,
   TouchableOpacity,
   Linking,
 } from 'react-native';
-import axios from 'axios';
+import FastImage from 'react-native-fast-image';
+import { GetAllPullResquestsBy } from '../services/PullRequests';
+import moment from 'moment';
 
-const GetAllPullResquestsBy = (creator, repositorie) => {
-  baseLink = 'https://api.github.com/repos';
-  link = `${baseLink}/${creator}/${repositorie}/pulls`;
-  return axios.get(link);
-};
-
-export default class componentName extends Component {
+export default class PullRequests extends Component {
   constructor(props) {
     super(props);
     const { navigation } = this.props;
@@ -54,6 +49,10 @@ export default class componentName extends Component {
     });
   };
 
+  formatData = data => {
+    return moment(data).format('DD/MM/YYYY h:mm');
+  };
+
   /**
    * @memberof PullRequests
    * @instance
@@ -67,16 +66,27 @@ export default class componentName extends Component {
       onPress={() => this.openURLLink(item.html_url)}
     >
       {/* Nome / Foto do autor do PR, Título do PR, Data do PR e Body do PR */}
-      <View style={{ flex: 1 }}>
-        <Text>{item.user.login}</Text>
-        <Image
+      <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+        <FastImage
           style={styles.authorAvatar}
           source={{ uri: item.user.avatar_url }}
+          resizeMode={FastImage.resizeMode.contain}
         />
+        <View style={{ paddingLeft: 10 }}>
+          <Text style={{ font: 1 }}>{item.user.login}</Text>
+          <Text style={{ flex: 1, fontSize: 16, fontWeight: '500' }}>
+            {this.formatData(item.created_at)}
+          </Text>
+        </View>
       </View>
-      <Text style={{ flex: 1 }}>{item.title}</Text>
-      <Text style={{ flex: 1 }}>{item.created_at}</Text>
-      <Text style={{ flex: 0.5 }}>{item.body}</Text>
+      <View style={{ flex: 1, marginTop: 10 }}>
+        <Text
+          style={{ flex: 1, fontSize: 20, fontWeight: '800', marginBottom: 10 }}
+        >
+          {item.title}
+        </Text>
+        <Text style={{ flex: 0.5 }}>{item.body}</Text>
+      </View>
     </TouchableOpacity>
   );
 
@@ -104,6 +114,10 @@ export default class componentName extends Component {
   };
 }
 
+// PullRequests.navigationOptions = {
+//   title: navigation.state.params.repositorie,
+// };
+
 const styles = StyleSheet.create({
   content: {
     flex: 1,
@@ -120,6 +134,5 @@ const styles = StyleSheet.create({
     width: 45,
     height: 45,
     borderRadius: 65,
-    resizeMode: 'contain',
   },
 });

@@ -8,9 +8,6 @@ import { createStackNavigator, createAppContainer } from 'react-navigation';
 const repositoriesScreenStack = {
   Repositories: {
     screen: Repositories,
-    navigationOptions: {
-      header: null,
-    },
   },
   PullRequests: {
     screen: PullRequests,

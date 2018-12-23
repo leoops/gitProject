@@ -1,24 +1,18 @@
 import React, { Component } from 'react';
 import { StyleSheet, FlatList } from 'react-native';
-import axios from 'axios';
-import ReposritorieCard from '../components/RepositorieCard';
-
-const GetAllRepositoriesBy = (language, page, sort) => {
-  baseLink = 'https://api.github.com/search/repositories?q=language:';
-  link = `${baseLink}${language}&sort=${sort}&page=${page}`;
-  return axios.get(link);
-};
+import RepositorieCard from '../components/RepositorieCard';
+import { GetAllRepositoriesBy } from '../services/Repositories';
 
 export default class Repositories extends Component {
   constructor(props) {
     super(props);
     this.state = {
       repositories: [],
+      refreshing: true,
     };
     this.page = 1;
     this.language = 'Java';
     this.sort = 'stars';
-    this.refreshing = false;
   }
 
   componentDidMount = () => {
@@ -33,7 +27,7 @@ export default class Repositories extends Component {
    * @param {object} item - Dados do card a ser renderizado.
    */
   renderCardRepositorie = ({ item }) => (
-    <ReposritorieCard data={item} navigation={this.props.navigation} />
+    <RepositorieCard data={item} navigation={this.props.navigation} />
   );
 
   /**
@@ -54,11 +48,15 @@ export default class Repositories extends Component {
    * @description Metodo busca de todos os repositorios
    */
   updateRepositories = () => {
+    this.setState({ refreshing: true });
     GetAllRepositoriesBy(this.language, this.page, this.sort)
       .then(({ data }) => data.items)
       .then(response => {
         let { repositories } = this.state;
-        this.setState({ repositories: repositories.concat(response) });
+        this.setState({
+          repositories: repositories.concat(response),
+          refreshing: false,
+        });
         this.page += 1;
       })
       .catch(error => console.warn(error));
@@ -71,20 +69,19 @@ export default class Repositories extends Component {
    * @description Metodo atualizaçao de lista de repositorios
    */
   refreshingRepositories = () => {
-    this.refreshing = true;
+    this.setState({ refreshing: true });
     this.page = 1;
     GetAllRepositoriesBy(this.language, this.page, this.sort)
       .then(response => response.data.items)
       .then(response => {
-        this.refreshing = false;
         let { repositories } = this.state;
-        this.setState({ repositories: response });
+        this.setState({ repositories: response, refreshing: false });
         this.page += 1;
       })
       .catch(error => console.warn(error));
   };
   render = () => {
-    const { repositories } = this.state;
+    const { repositories, refreshing } = this.state;
     return (
       <FlatList
         style={styles.content}
@@ -93,7 +90,7 @@ export default class Repositories extends Component {
         onEndReached={this.updateRepositories}
         renderItem={this.renderCardRepositorie}
         onRefresh={this.refreshingRepositories}
-        refreshing={this.refreshing}
+        refreshing={refreshing}
       />
     );
   };
