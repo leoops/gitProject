@@ -12,11 +12,7 @@ export default function PullRequestHeader(props: Props) {
 
   return (
     <View style={container}>
-      <Image
-        style={image}
-        source={{ uri: imageUrl, cache: 'force-cache' }}
-        resizeMode="contain"
-      />
+      <Image style={image} source={{ uri: imageUrl }} resizeMode="contain" />
       <Text style={login}>{user}</Text>
     </View>
   );

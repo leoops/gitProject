@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
+import { Separator } from '..';
 import starImage from '../../assets/images/favorites.png';
 import forkImage from '../../assets/images/fork.png';
 import RepositoryIcon from './RepositoryIcon';
@@ -38,13 +39,13 @@ export default function RepositoryCardHeader(props: Props) {
         <Text numberOfLines={1} style={textName}>
           {name}
         </Text>
-        <VerticalSeparator />
+        <Separator onlyVertical />
         <View style={rowContainer}>
           <RepositoryIcon image={forkImage} text={forks_count} />
-          <HorizontalSeparator />
+          <Separator onlyHorizontal />
           <RepositoryIcon image={starImage} text={stargazers_count} />
         </View>
-        <VerticalSeparator />
+        <Separator onlyVertical />
         <Text numberOfLines={1}>{owner.login}</Text>
       </View>
     </View>

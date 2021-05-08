@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { Separator } from '../';
 
 interface Props {
   description: string;
@@ -8,34 +9,22 @@ interface Props {
 }
 export default function PullRequestBody(props: Props) {
   const { description, title, date } = props;
-  const {
-    container,
-    descriptionText,
-    titleText,
-    dateText,
-    separatorVertical,
-  } = styles;
-
-  const VerticalSeparator = () => <View style={separatorVertical} />;
+  const { titleText, dateText } = styles;
 
   return (
-    <View style={container}>
+    <View>
       <Text style={dateText}>{date}</Text>
-      <VerticalSeparator />
-      <Text numberOfLines={1} style={titleText}>
+      <Separator onlyVertical />
+      <Text numberOfLines={2} style={titleText}>
         {title}
       </Text>
-      <VerticalSeparator />
-      <Text numberOfLines={2} style={descriptionText}>
-        {description}
-      </Text>
+      <Separator onlyVertical />
+      <Text numberOfLines={2}>{description}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, paddingTop: 10 },
-  descriptionText: { flex: 1 },
   separatorVertical: { paddingTop: 5 },
   dateText: {
     fontSize: 12,

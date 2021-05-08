@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, FlatList, Linking } from 'react-native';
+import { StyleSheet, FlatList, Linking, View } from 'react-native';
 import { requestAllPullRequestsBy, PullRequest } from '../services/Requests';
-import { PullRequestItem } from '../components/';
+import { PullRequestItem, Separator } from '../components/';
 import { formatData } from '../utils/Utils';
-import ListItemSeparator from '../components/ListItemSeparator';
+import { responsiveWidth } from 'react-native-responsive-dimensions';
 
 export default function PullRequests(props) {
   const { route, navigation } = props;
   const { creator, repository } = route.params;
   const [pullRequests, setPullRequests] = useState<PullRequest[]>([]);
+  const numColumns = 2;
   navigation.setOptions({ title: repository });
 
   useEffect(() => {
@@ -31,14 +32,19 @@ export default function PullRequests(props) {
     });
   };
 
+  const defineWidthColumn = () => {
+    const percent = 95 / numColumns;
+    return responsiveWidth(percent);
+  };
+
+  const widthColumn = defineWidthColumn();
+
   const keyExtractor = ({ id }: PullRequest, index: number) => `${id}${index}`;
 
   const renderCardPullRequest = ({ item }: { item: PullRequest }) => {
     const { user, created_at, body, title, html_url } = item;
     const date = formatData(created_at);
     const onPress = openURLLink(html_url);
-    console.log(item);
-
     return (
       <PullRequestItem
         user={user}
@@ -46,23 +52,31 @@ export default function PullRequests(props) {
         description={body}
         onPress={onPress}
         title={title}
+        width={widthColumn}
       />
     );
   };
 
   return (
-    <FlatList
-      style={styles.content}
-      data={pullRequests}
-      keyExtractor={keyExtractor}
-      renderItem={renderCardPullRequest}
-      ItemSeparatorComponent={ListItemSeparator}
-    />
+    <View style={{ flex: 1 }}>
+      <FlatList
+        numColumns={numColumns}
+        style={styles.content}
+        columnWrapperStyle={styles.row}
+        data={pullRequests}
+        keyExtractor={keyExtractor}
+        horizontal={false}
+        renderItem={renderCardPullRequest}
+        ItemSeparatorComponent={Separator}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   content: {
-    padding: 10,
+    flex: 1,
+    padding: 5,
   },
+  row: { justifyContent: 'space-around' },
 });

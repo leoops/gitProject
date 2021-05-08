@@ -1,4 +1,5 @@
-import PullRequestItem from './PullRequest/PullRequestItem';
-import RepositoryCard from './RepositoryCard/RepositoryCard';
+import PullRequestItem from './PullRequest/';
+import RepositoryCard from './RepositoryCard/';
+import Separator from './Separator';
 
-export { PullRequestItem, RepositoryCard };
+export { PullRequestItem, RepositoryCard, Separator };
