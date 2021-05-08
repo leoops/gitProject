@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, FlatList, Linking } from 'react-native';
 import { requestAllPullRequestsBy, PullRequest } from '../services/Requests';
-import PullRequestItem from '../components/PullRequest/PullRequestItem';
+import { PullRequestItem } from '../components/';
 import { formatData } from '../utils/Utils';
 
 export default function PullRequests(props) {

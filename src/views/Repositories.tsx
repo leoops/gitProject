@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, FlatList } from 'react-native';
-import RepositoryCard from '../components/RepositoryCard/RepositoryCard';
-import { requestAllRepositoriesBy, Repository } from '../services/Requests';
 import { StackScreenProps } from '@react-navigation/stack';
+import { RepositoryCard } from '../components/';
+import { requestAllRepositoriesBy, Repository } from '../services/Requests';
 
 type Props = StackScreenProps<{}>;
 
