@@ -17,23 +17,17 @@ export default function PullRequestItem(props: PullRequest) {
 
   return (
     <TouchableOpacity style={styles.cardContainer} onPress={onPress}>
-      <PullRequestHeader
-        date={date}
-        imageUrl={user.avatar_url}
-        user={user.login}
-      />
-      <PullRequestBody description={description} title={title} />
+      <PullRequestHeader imageUrl={user.avatar_url} user={user.login} />
+      <PullRequestBody description={description} date={date} title={title} />
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   cardContainer: {
-    flex: 1,
-    backgroundColor: '#0007',
     padding: 10,
-    marginHorizontal: 9,
-    marginVertical: 5,
-    borderRadius: 5,
+    borderRadius: 10,
+    borderColor: '#0094cc',
+    borderWidth: 1,
   },
 });

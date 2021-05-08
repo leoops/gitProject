@@ -3,6 +3,7 @@ import { StyleSheet, FlatList, Linking } from 'react-native';
 import { requestAllPullRequestsBy, PullRequest } from '../services/Requests';
 import { PullRequestItem } from '../components/';
 import { formatData } from '../utils/Utils';
+import ListItemSeparator from '../components/ListItemSeparator';
 
 export default function PullRequests(props) {
   const { route, navigation } = props;
@@ -36,6 +37,7 @@ export default function PullRequests(props) {
     const { user, created_at, body, title, html_url } = item;
     const date = formatData(created_at);
     const onPress = openURLLink(html_url);
+    console.log(item);
 
     return (
       <PullRequestItem
@@ -54,12 +56,13 @@ export default function PullRequests(props) {
       data={pullRequests}
       keyExtractor={keyExtractor}
       renderItem={renderCardPullRequest}
+      ItemSeparatorComponent={ListItemSeparator}
     />
   );
 }
 
 const styles = StyleSheet.create({
   content: {
-    flex: 1,
+    padding: 10,
   },
 });

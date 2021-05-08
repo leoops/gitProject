@@ -14,16 +14,21 @@ interface Props {
 export default function RepositoryIcon(props: Props) {
   const { image, text } = props;
   return (
-    <Text style={styles.row}>
+    <View style={styles.row}>
       <Image style={styles.icon} source={image} />
-      {text}
-    </Text>
+      <Text style={styles.text}>{text}</Text>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   row: {
-    flex: 1,
+    alignContent: 'center',
+    flexDirection: 'row',
+  },
+  text: {
+    paddingLeft: 5,
+    textAlign: 'center',
   },
   icon: {
     width: 16,

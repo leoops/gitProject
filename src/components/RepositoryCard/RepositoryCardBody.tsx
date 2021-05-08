@@ -6,14 +6,19 @@ interface Props {
 }
 
 export default function RepositoryCardBody({ text }: Props) {
-  return <Text style={styles.textDescription}>{text}</Text>;
+  return (
+    <Text numberOfLines={2} style={styles.textDescription}>
+      {text}
+    </Text>
+  );
 }
 
 const styles = StyleSheet.create({
   textDescription: {
-    flex: 1,
-    marginTop: 15,
+    paddingTop: 10,
+    paddingRight: 10,
+    paddingLeft: 5,
     fontSize: 16,
-    textAlign: 'auto',
+    lineHeight: 20,
   },
 });

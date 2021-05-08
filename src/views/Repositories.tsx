@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, FlatList } from 'react-native';
+import { StyleSheet, FlatList, View } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RepositoryCard } from '../components/';
 import { requestAllRepositoriesBy, Repository } from '../services/Requests';
+import ListItemSeparator from '../components/ListItemSeparator';
 
 type Props = StackScreenProps<{}>;
 
@@ -64,6 +65,8 @@ export default function Repositories(props: Props) {
     return <RepositoryCard data={item} onPress={onPress} />;
   };
 
+  const renderSeparator = () => <View style={styles.separator} />;
+
   return (
     <FlatList
       style={styles.content}
@@ -72,11 +75,13 @@ export default function Repositories(props: Props) {
       onEndReached={updateRepositories}
       renderItem={renderCardRepository}
       onRefresh={refreshingRepositories}
+      ItemSeparatorComponent={ListItemSeparator}
       refreshing={refreshing}
     />
   );
 }
 
 const styles = StyleSheet.create({
-  content: { flex: 1 },
+  content: { padding: 10, backgroundColor: '#fff' },
+  separator: { padding: 5 },
 });

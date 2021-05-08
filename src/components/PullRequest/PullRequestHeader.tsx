@@ -4,28 +4,35 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 interface Props {
   imageUrl: string;
   user: string;
-  date: string;
 }
 
 export default function PullRequestHeader(props: Props) {
-  const { user, date, imageUrl } = props;
-  const { container, image, userContainer, login, dateText } = styles;
+  const { user, imageUrl } = props;
+  const { container, image, login } = styles;
 
   return (
     <View style={container}>
-      <Image style={image} source={{ uri: imageUrl }} resizeMode="contain" />
-      <View style={userContainer}>
-        <Text style={login}>{user}</Text>
-        <Text style={dateText}>{date}</Text>
-      </View>
+      <Image
+        style={image}
+        source={{ uri: imageUrl, cache: 'force-cache' }}
+        resizeMode="contain"
+      />
+      <Text style={login}>{user}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, flexDirection: 'row', alignItems: 'center' },
-  image: {},
-  userContainer: { paddingLeft: 10 },
-  login: {},
-  dateText: { flex: 1, fontSize: 16, fontWeight: '500' },
+  container: {
+    alignItems: 'center',
+  },
+  image: {
+    width: 45,
+    height: 45,
+    borderRadius: 65,
+  },
+  login: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
 });

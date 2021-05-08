@@ -28,10 +28,9 @@ export default function RepositoryCard(props: Props) {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    backgroundColor: '#0004',
     padding: 10,
-    marginHorizontal: 9,
-    marginVertical: 5,
-    borderRadius: 5,
+    borderRadius: 10,
+    borderColor: '#0094cc',
+    borderWidth: 1,
   },
 });
