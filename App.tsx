@@ -8,7 +8,11 @@ const Stack = createStackNavigator();
 
 function App() {
   const ScreenRoutes = Routes.map((screen: RouteScreen) => (
-    <Stack.Screen name={screen.name} component={screen.component} />
+    <Stack.Screen
+      options={{ headerBackTitleVisible: false }}
+      name={screen.name}
+      component={screen.component}
+    />
   ));
 
   return (

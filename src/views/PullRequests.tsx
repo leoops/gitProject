@@ -1,46 +1,26 @@
-import React, { Component } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  TouchableOpacity,
-  Linking,
-  Image,
-} from 'react-native';
-import { GetAllPullResquestsBy } from '../services/PullRequests';
-import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, FlatList, Linking } from 'react-native';
+import { requestAllPullRequestsBy, PullRequest } from '../services/Requests';
+import PullRequestItem from '../components/PullRequest/PullRequestItem';
+import { formatData } from '../utils/Utils';
 
-export default class PullRequests extends Component {
-  constructor(props) {
-    super(props);
-    const { route, navigation } = this.props;
-    const { creator, repositorie } = route.params;
+export default function PullRequests(props) {
+  const { route, navigation } = props;
+  const { creator, repository } = route.params;
+  const [pullRequests, setPullRequests] = useState<PullRequest[]>([]);
+  navigation.setOptions({ title: repository });
 
-    this.creator = creator;
-    this.repositorie = repositorie;
-    this.state = { pullRequests: [] };
-
-    navigation.setOptions({ title: repositorie });
-  }
-
-  componentDidMount = () => {
-    GetAllPullResquestsBy(this.creator, this.repositorie)
+  useEffect(() => {
+    const params = { creator, repository };
+    requestAllPullRequestsBy(params)
       .then(response => response.data)
       .then(pullRequests => {
-        this.setState({ pullRequests });
+        setPullRequests(pullRequests);
       })
       .catch(error => console.warn(error));
-  };
+  }, []);
 
-  /**
-   * @memberof PullRequests
-   * @instance
-   * @method openUrlLink
-   * @description Metodo de redirecionamento para pagina web.
-   * @param {string} url - link de.
-   */
-  openURLLink = url => {
+  const openURLLink = (url: string) => () => {
     Linking.canOpenURL(url).then(supported => {
       if (supported) {
         Linking.openURL(url);
@@ -50,89 +30,36 @@ export default class PullRequests extends Component {
     });
   };
 
-  formatData = data => {
-    return moment(data).format('DD/MM/YYYY h:mm');
-  };
+  const keyExtractor = ({ id }: PullRequest, index: number) => `${id}${index}`;
 
-  /**
-   * @memberof PullRequests
-   * @instance
-   * @method renderCardPullRequest
-   * @description Metodo de renderização de componente de pull request.
-   * @param {object} item - Dados do card a ser renderizado.
-   */
-  renderCardPullRequest = ({ item }) => (
-    <TouchableOpacity
-      style={styles.cardContainer}
-      onPress={() => this.openURLLink(item.html_url)}>
-      {/* Nome / Foto do autor do PR, Título do PR, Data do PR e Body do PR */}
-      <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-        <Image
-          style={styles.authorAvatar}
-          source={{ uri: item.user.avatar_url }}
-          resizeMode="contain"
-        />
-        <View style={{ paddingLeft: 10 }}>
-          <Text style={{ font: 1 }}>{item.user.login}</Text>
-          <Text style={{ flex: 1, fontSize: 16, fontWeight: '500' }}>
-            {this.formatData(item.created_at)}
-          </Text>
-        </View>
-      </View>
-      <View style={{ flex: 1, marginTop: 10 }}>
-        <Text
-          style={{
-            flex: 1,
-            fontSize: 20,
-            fontWeight: '800',
-            marginBottom: 10,
-          }}>
-          {item.title}
-        </Text>
-        <Text style={{ flex: 0.5 }}>{item.body}</Text>
-      </View>
-    </TouchableOpacity>
-  );
+  const renderCardPullRequest = ({ item }: { item: PullRequest }) => {
+    const { user, created_at, body, title, html_url } = item;
+    const date = formatData(created_at);
+    const onPress = openURLLink(html_url);
 
-  /**
-   * @memberof PullRequests
-   * @instance
-   * @method keyExtractor
-   * @description Metodo contrução de key de itens do flatList
-   * @param {object} item - Dados do card.
-   * @param {int} index - Indice do objeto no flatList.
-   * @returns {string}
-   */
-  keyExtractor = (item, index) => `${item.id}${index}`;
-
-  render = () => {
-    const { pullRequests } = this.state;
     return (
-      <FlatList
-        style={styles.content}
-        data={pullRequests}
-        keyExtractor={this.keyExtractor}
-        renderItem={this.renderCardPullRequest}
+      <PullRequestItem
+        user={user}
+        date={date}
+        description={body}
+        onPress={onPress}
+        title={title}
       />
     );
   };
+
+  return (
+    <FlatList
+      style={styles.content}
+      data={pullRequests}
+      keyExtractor={keyExtractor}
+      renderItem={renderCardPullRequest}
+    />
+  );
 }
 
 const styles = StyleSheet.create({
   content: {
     flex: 1,
-  },
-  cardContainer: {
-    flex: 1,
-    backgroundColor: '#0007',
-    padding: 10,
-    marginHorizontal: 9,
-    marginVertical: 5,
-    borderRadius: 5,
-  },
-  authorAvatar: {
-    width: 45,
-    height: 45,
-    borderRadius: 65,
   },
 });
