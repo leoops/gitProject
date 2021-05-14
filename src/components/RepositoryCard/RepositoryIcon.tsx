@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
   text: {
     paddingLeft: 5,
     textAlign: 'center',
+    fontSize: 12,
   },
   icon: {
     width: 16,

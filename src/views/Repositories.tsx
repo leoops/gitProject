@@ -3,6 +3,7 @@ import { StyleSheet, FlatList } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RepositoryCard, Separator } from '../components/';
 import { requestAllRepositoriesBy, Repository } from '../services/Requests';
+import { responsiveWidth } from 'react-native-responsive-dimensions';
 
 type Props = StackScreenProps<{}>;
 
@@ -16,6 +17,7 @@ export default function Repositories(props: Props) {
   const [countPage, setCountPage] = useState(1);
   const language = 'Java';
   const sort = 'stars';
+  const numColumns = 2;
 
   useEffect(() => {
     updateRepositories();
@@ -55,18 +57,27 @@ export default function Repositories(props: Props) {
     }
   };
 
+  const defineWidthColumn = () => {
+    const percent = 95 / numColumns;
+    return responsiveWidth(percent);
+  };
+
+  const widthColumn = defineWidthColumn();
+
   const renderCardRepository = ({ item }: { item: Repository }) => {
     const { owner, name } = item;
     const { navigate } = props.navigation;
     const params = { creator: owner.login, repository: name };
     const onPress = () => navigate('PullRequests', params);
 
-    return <RepositoryCard data={item} onPress={onPress} />;
+    return <RepositoryCard data={item} onPress={onPress} width={widthColumn} />;
   };
 
   return (
     <FlatList
+      numColumns={numColumns}
       style={styles.content}
+      columnWrapperStyle={styles.row}
       data={repositories}
       keyExtractor={keyExtractor}
       onEndReached={updateRepositories}
@@ -80,7 +91,9 @@ export default function Repositories(props: Props) {
 
 const styles = StyleSheet.create({
   content: {
-    padding: 10,
+    flex: 1,
+    padding: 5,
     backgroundColor: '#fff',
   },
+  row: { justifyContent: 'space-around' },
 });

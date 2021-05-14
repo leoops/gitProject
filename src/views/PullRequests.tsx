@@ -45,6 +45,7 @@ export default function PullRequests(props) {
     const { user, created_at, body, title, html_url } = item;
     const date = formatData(created_at);
     const onPress = openURLLink(html_url);
+
     return (
       <PullRequestItem
         user={user}
@@ -78,5 +79,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 5,
   },
-  row: { justifyContent: 'space-around' },
+  row: {
+    justifyContent: 'space-around',
+  },
 });

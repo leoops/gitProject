@@ -1,81 +1,45 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
-import { Separator } from '..';
-import starImage from '../../assets/images/favorites.png';
-import forkImage from '../../assets/images/fork.png';
-import RepositoryIcon from './RepositoryIcon';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ImageSourcePropType,
+} from 'react-native';
 
 interface Props {
-  name: string;
-  forks_count: number;
-  stargazers_count: number;
   owner: { avatar_url: string; login: string };
 }
 
 export default function RepositoryCardHeader(props: Props) {
-  const { name, forks_count, stargazers_count, owner } = props;
-  const {
-    cardHeader,
-    authorAvatar,
-    authorContainer,
-    textName,
-    rowContainer,
-    separatorHorizontal,
-    separatorVertical,
-  } = styles;
-
-  const VerticalSeparator = () => <View style={separatorVertical} />;
-
-  const HorizontalSeparator = () => <View style={separatorHorizontal} />;
+  const { owner } = props;
+  const { cardHeader, authorAvatar, text } = styles;
+  const imageSource: ImageSourcePropType = {
+    uri: owner.avatar_url,
+    cache: 'force-cache',
+  };
 
   return (
     <View style={cardHeader}>
-      <Image
-        style={authorAvatar}
-        source={{ uri: owner.avatar_url, cache: 'force-cache' }}
-        resizeMode="contain"
-      />
-      <View style={authorContainer}>
-        <Text numberOfLines={1} style={textName}>
-          {name}
-        </Text>
-        <Separator onlyVertical />
-        <View style={rowContainer}>
-          <RepositoryIcon image={forkImage} text={forks_count} />
-          <Separator onlyHorizontal />
-          <RepositoryIcon image={starImage} text={stargazers_count} />
-        </View>
-        <Separator onlyVertical />
-        <Text numberOfLines={1}>{owner.login}</Text>
-      </View>
+      <Image style={authorAvatar} source={imageSource} resizeMode="contain" />
+      <Text style={text} numberOfLines={1}>
+        {owner.login}
+      </Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   cardHeader: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingBottom: 5,
   },
-  separatorHorizontal: { paddingHorizontal: 5 },
-  separatorVertical: { paddingTop: 5 },
   authorAvatar: {
-    width: 45,
-    height: 45,
+    width: 24,
+    height: 24,
     borderRadius: 65,
   },
-  authorContainer: {
-    paddingLeft: 10,
-    flex: 1,
-  },
-  rowContainer: {
-    flexDirection: 'row',
-  },
-  textName: {
-    flex: 1,
-    fontSize: 20,
-    fontWeight: 'bold',
+  text: {
+    paddingLeft: 5,
   },
 });
