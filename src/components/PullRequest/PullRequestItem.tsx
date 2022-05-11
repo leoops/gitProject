@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Separator } from '../';
+import { getCurrentTheme } from '../../utils/Utils';
 import { PullRequestBody, PullRequestHeader } from './';
 
 export interface PullRequest {
@@ -15,14 +16,13 @@ export interface PullRequest {
 
 export default function PullRequestItem(props: PullRequest) {
   const { onPress, user, date, title, description, width } = props;
-
+  const theme = getCurrentTheme();
   const styles = StyleSheet.create({
     cardContainer: {
-      flex: 1,
-      padding: 10,
+      padding: theme.ITEM_PADDING,
+      borderColor: theme.BORDER_COLOR,
+      borderWidth: theme.BORDER_SIZE,
       borderRadius: 10,
-      borderColor: '#0094cc',
-      borderWidth: 1,
       width,
     },
   });

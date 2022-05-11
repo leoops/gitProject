@@ -4,6 +4,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { RepositoryCard, Separator } from '../components/';
 import { requestAllRepositoriesBy, Repository } from '../services/Requests';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
+import { getCurrentTheme } from '../utils/Utils';
 
 type Props = StackScreenProps<{}>;
 
@@ -11,7 +12,18 @@ interface RepositoriesRequest {
   data: { items: Repository[] };
 }
 
-export default function Repositories(props: Props) {
+export default (props: Props) => {
+  const theme = getCurrentTheme();
+
+  const styles = StyleSheet.create({
+    content: {
+      flex: 1,
+      padding: 5,
+      backgroundColor: theme.CONTAINER_COLOR,
+    },
+    row: { justifyContent: 'space-around' },
+  });
+
   const [repositories, setRepositories] = useState<Repository[]>([]);
   const [refreshing, setRefreshing] = useState(true);
   const [countPage, setCountPage] = useState(1);
@@ -87,13 +99,4 @@ export default function Repositories(props: Props) {
       refreshing={refreshing}
     />
   );
-}
-
-const styles = StyleSheet.create({
-  content: {
-    flex: 1,
-    padding: 5,
-    backgroundColor: '#fff',
-  },
-  row: { justifyContent: 'space-around' },
-});
+};
