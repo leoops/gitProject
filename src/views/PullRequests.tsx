@@ -1,11 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, FlatList, Linking, View } from 'react-native';
+import { responsiveWidth } from 'react-native-responsive-dimensions';
+import { StackScreenProps } from '@react-navigation/stack';
 import { requestAllPullRequestsBy, PullRequest } from '../services/Requests';
 import { PullRequestItem, Separator } from '../components/';
-import { formatData } from '../utils/Utils';
-import { responsiveWidth } from 'react-native-responsive-dimensions';
+import { formatData, getCurrentTheme } from '../utils/Utils';
 
-export default function PullRequests(props) {
+type Props = StackScreenProps<{}>;
+
+export default (props: Props) => {
+  const theme = getCurrentTheme();
+  const styles = StyleSheet.create({
+    content: {
+      flex: theme.FULL,
+      backgroundColor: theme.CONTAINER_COLOR,
+      padding: 5,
+    },
+    row: {
+      justifyContent: 'space-around',
+    },
+  });
+
   const { route, navigation } = props;
   const { creator, repository } = route.params;
   const [pullRequests, setPullRequests] = useState<PullRequest[]>([]);
@@ -59,27 +74,15 @@ export default function PullRequests(props) {
   };
 
   return (
-    <View style={{ flex: 1 }}>
-      <FlatList
-        numColumns={numColumns}
-        style={styles.content}
-        columnWrapperStyle={styles.row}
-        data={pullRequests}
-        keyExtractor={keyExtractor}
-        horizontal={false}
-        renderItem={renderCardPullRequest}
-        ItemSeparatorComponent={Separator}
-      />
-    </View>
+    <FlatList
+      numColumns={numColumns}
+      style={styles.content}
+      columnWrapperStyle={styles.row}
+      data={pullRequests}
+      keyExtractor={keyExtractor}
+      horizontal={false}
+      renderItem={renderCardPullRequest}
+      ItemSeparatorComponent={Separator}
+    />
   );
-}
-
-const styles = StyleSheet.create({
-  content: {
-    flex: 1,
-    padding: 5,
-  },
-  row: {
-    justifyContent: 'space-around',
-  },
-});
+};

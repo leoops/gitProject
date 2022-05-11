@@ -1,5 +1,7 @@
 import Axios from 'axios';
 
+const BASE_URL = 'https://api.github.com';
+
 export default Axios.create({
-  baseURL: 'https://api.github.com',
+  baseURL: BASE_URL,
 });

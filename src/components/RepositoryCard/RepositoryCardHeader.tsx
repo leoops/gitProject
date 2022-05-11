@@ -6,12 +6,33 @@ import {
   StyleSheet,
   ImageSourcePropType,
 } from 'react-native';
+import { getCurrentTheme } from '../../utils/Utils';
 
 interface Props {
   owner: { avatar_url: string; login: string };
 }
 
-export default function RepositoryCardHeader(props: Props) {
+export default (props: Props) => {
+  const theme = getCurrentTheme();
+
+  const styles = StyleSheet.create({
+    cardHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    authorAvatar: {
+      width: 24,
+      height: 24,
+      borderRadius: 65,
+    },
+    text: {
+      color: theme.PRIMARY_TEXT_COLOR,
+      opacity: theme.FONT_OPACITY_LOW,
+      fontSize: theme.FONT_SIZE_LOW,
+      paddingLeft: 5,
+    },
+  });
+
   const { owner } = props;
   const { cardHeader, authorAvatar, text } = styles;
   const imageSource: ImageSourcePropType = {
@@ -27,19 +48,4 @@ export default function RepositoryCardHeader(props: Props) {
       </Text>
     </View>
   );
-}
-
-const styles = StyleSheet.create({
-  cardHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  authorAvatar: {
-    width: 24,
-    height: 24,
-    borderRadius: 65,
-  },
-  text: {
-    paddingLeft: 5,
-  },
-});
+};
